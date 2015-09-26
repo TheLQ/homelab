@@ -16,6 +16,7 @@ function vm_make() {
 	VM_NAME=$1
 
 	[ -z $DATA_DIR ] && { echo "DATA_DIR is not defined" 1>&2 ; exit 1; }
+	[ ! -d $DATA_DIR ] && { echo "DATA_DIR does not exist" 1>&2 ; exit 1; }
 	[ -z $DEBIAN_RELEASE ] && { echo "DEBIAN_RELEASE is not defined" 1>&2 ; exit 1; }
 
 	if lxc-ls | grep -q $VM_NAME; then 
