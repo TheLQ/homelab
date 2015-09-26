@@ -62,6 +62,9 @@ lxc.network.link = $IP_BRIDGE
 lxc.network.ipv4 = $IP_PREFIX.$IP_SUFFIX/$IP_CIDR
 lxc.network.ipv4.gateway = $IP_GATEWAY
 EOF
+
+	rm -rf $VM_FS/root/.bashrc
+	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
 }
 
 function vm_start() {
