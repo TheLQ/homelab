@@ -15,6 +15,12 @@ DEB_REPO_MIRROR=$IP_PREFIX.110
 #other static fields
 APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
 
+# make sure the data directory always exists
+if [[ ! -d $DATA_DIR ]]; then
+	echo "Cannot find data directory at $DATA_DIR"
+	exit 1
+fi
+
 function vm_make() {
 	if [ "$#" -ne 3 ]; then
 		echo "Must specify VM, last octet of ip, bridge interface"
