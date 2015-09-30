@@ -5,11 +5,12 @@ set -e -x
 #export PASSWORD=yourpassword
 source creds.sh
 
-export DEBIAN_RELEASE=jessie
-export DATA_DIR=/qproddata
-export IP_PREFIX=192.168.67
-export IP_CIDR=23
-export IP_GATEWAY=192.168.66.1
+DEBIAN_RELEASE=jessie
+DATA_DIR=/qproddata
+IP_PREFIX=192.168.67
+IP_CIDR=23
+IP_GATEWAY=192.168.66.1
+DEB_REPO_MIRROR=$IP_PREFIX.10
 
 function vm_make() {
 	if [ "$#" -ne 3 ]; then
