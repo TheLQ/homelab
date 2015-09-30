@@ -4,7 +4,7 @@
 source common.sh
 CONT_NAME=qmirror
 
-vm_make $CONT_NAME 10 qbr0
+vm_make $CONT_NAME 110 qbr0
 
 # disable default apt proxy as that's this machine
 rm $VM_FS$APT_PROXY_PATH

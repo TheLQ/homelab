@@ -10,7 +10,7 @@ DATA_DIR=/qproddata
 IP_PREFIX=192.168.67
 IP_CIDR=23
 IP_GATEWAY=192.168.66.1
-DEB_REPO_MIRROR=$IP_PREFIX.10
+DEB_REPO_MIRROR=$IP_PREFIX.110
 
 #other static fields
 APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
