@@ -12,6 +12,9 @@ IP_CIDR=23
 IP_GATEWAY=192.168.66.1
 DEB_REPO_MIRROR=$IP_PREFIX.10
 
+#other static fields
+APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
+
 function vm_make() {
 	if [ "$#" -ne 3 ]; then
 		echo "Must specify VM, last octet of ip, bridge interface"
@@ -66,6 +69,9 @@ EOF
 
 	rm -rf $VM_FS/root/.bashrc
 	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
+
+	#setup apt-proxy
+	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
 }
 
 function vm_start() {
