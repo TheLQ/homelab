@@ -1,0 +1,16 @@
+# /etc/exports: the access control list for filesystems which may be exported
+#		to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/quackdrive *(rw,sync,no_subtree_check,crossmnt,all_squash,anonuid=0,anongid=0)
+/scratchdrive *(rw,sync,no_subtree_check,crossmnt,all_squash,anonuid=0,anongid=0)
+/qprodconfig *(rw,sync,no_subtree_check,crossmnt,all_squash,anonuid=0,anongid=0)
+
+# this is included for debugging purposes, given to us by the lxc host
+/lxcroot *(rw,sync,no_subtree_check,crossmnt,all_squash,anonuid=0,anongid=0)
