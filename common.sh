@@ -6,7 +6,7 @@ set -e -x
 source creds.sh
 
 DEBIAN_RELEASE=jessie
-DATA_DIR=/qproddata
+DATA_DIR=/qprodconfig
 IP_PREFIX=192.168.67
 IP_CIDR=23
 IP_GATEWAY=192.168.66.1
@@ -50,8 +50,9 @@ function vm_make() {
 	VM_FS=$VM_ROOT/rootfs
 
 	#mount this repository inside the container
-	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind 0 0 >> $VM_ROOT/config
-	mkdir $VM_FS$DATA_DIR
+	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none bind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none bind,create=dir 0 0 >> $VM_ROOT/config
 
 	#container should use host configuration
 	cat <<EOF > $VM_FS/etc/network/interfaces

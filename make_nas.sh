@@ -6,8 +6,7 @@ CONT_NAME=qnas
 vm_make $CONT_NAME 111 qbr0
 
 # add the lxc root directory for debugging purposes
-mkdir $VM_FS/lxcroot
-echo lxc.mount.entry=/var/lib/lxc/ $VM_FS/lxcroot none bind 0 0 >> $VM_ROOT/config
+echo lxc.mount.entry=/var/lib/lxc/ $VM_FS/lxcroot none bind,create=dir 0 0 >> $VM_ROOT/config
 
 vm_start_first $CONT_NAME
 
@@ -21,6 +20,4 @@ lxc-attach -n $CONT_NAME -- service nfs-kernel-server restart -y
 lxc-attach -n $CONT_NAME -- apt-get install samba -y
 rm $VM_FS/etc/samba/smb.conf
 ln -s $DATA_DIR/configs/nas/smb.conf $VM_FS/etc/samba/smb.conf
-# tmp
-lxc-attach -n $CONT_NAME -- $DATA_DIR/mount-quackdrive.sh
 lxc-attach -n $CONT_NAME -- service smbd restart
