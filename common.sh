@@ -9,7 +9,10 @@ DEBIAN_RELEASE=jessie
 DATA_DIR=/qprodconfig
 IP_PREFIX=192.168.67
 IP_CIDR=23
+IP_SUBNET=255.255.254.0
 IP_GATEWAY=192.168.66.1
+IP_BRIDGE_INTERFACE=lxc-host-bridge
+IP_HOSTS_FILE=lxc-hosts
 DEB_REPO_MIRROR=$IP_PREFIX.110
 
 #other static fields
@@ -20,6 +23,23 @@ if [[ ! -d $DATA_DIR ]]; then
 	echo "Cannot find data directory at $DATA_DIR"
 	exit 1
 fi
+
+# initialize hosts 
+if [[ ! -f $IP_HOSTS_FILE ]]; then
+	echo "Cannot find hosts file at $IP_HOSTS_FILE"
+	exit 1
+fi
+
+declare -A IP_HOSTS
+while read line_raw; do
+	line_arr=($line_raw)
+	IP=${line_arr[0]}
+	HOST=${line_arr[1]}
+
+	echo "IP $IP Host $HOST"
+
+	IP_HOSTS[$HOST]=$IP
+done < $IP_HOSTS_FILE
 
 function vm_make() {
 	if [ "$#" -ne 3 ]; then
@@ -33,9 +53,15 @@ function vm_make() {
 	[ -z $DATA_DIR ] && { echo "DATA_DIR is not defined" 1>&2 ; exit 1; }
 	[ ! -d $DATA_DIR ] && { echo "DATA_DIR does not exist" 1>&2 ; exit 1; }
 	[ -z $DEBIAN_RELEASE ] && { echo "DEBIAN_RELEASE is not defined" 1>&2 ; exit 1; }
-	[ -z $IP_PREFIX ] && { echo "IP_PREFIX is not defined" 1>&2 ; exit 1; }
 	[ -z $IP_CIDR ] && { echo "IP_CIDR is not defined" 1>&2 ; exit 1; }
-	[ -z $IP_GATEWAY ] && { echo "IP_PREFIX is not defined" 1>&2 ; exit 1; }
+	[ -z $IP_GATEWAY ] && { echo "IP_GATEWAY is not defined" 1>&2 ; exit 1; }
+	[ -z $PASSWORD ] && { echo "PASSWORD is not defined" 1>&2 ; exit 1; }
+
+	if [ ! ${IP_HOSTS[$VM_NAME]+isset} ] ; then
+		echo "No IP for $VM_NAME found in $IP_HOSTS_FILE"
+		exit
+	fi
+	IP_ADDR=${IP_HOSTS[$VM_NAME]}
 
 	if lxc-ls | grep -q $VM_NAME; then 
 		echo "Container $VM_NAME already exists, must be destroyed first!"
@@ -70,7 +96,7 @@ EOF
 lxc.network.type = veth
 lxc.network.flags = up
 lxc.network.link = $IP_BRIDGE
-lxc.network.ipv4 = $IP_PREFIX.$IP_SUFFIX/$IP_CIDR
+lxc.network.ipv4 = $IP_ADDR/$IP_CIDR
 lxc.network.ipv4.gateway = $IP_GATEWAY
 EOF
 
