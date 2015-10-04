@@ -57,11 +57,9 @@ function vm_make() {
 	[ -z $IP_GATEWAY ] && { echo "IP_GATEWAY is not defined" 1>&2 ; exit 1; }
 	[ -z $PASSWORD ] && { echo "PASSWORD is not defined" 1>&2 ; exit 1; }
 
-	if [ ! ${IP_HOSTS[$VM_NAME]+isset} ] ; then
-		echo "No IP for $VM_NAME found in $IP_HOSTS_FILE"
-		exit
-	fi
-	IP_ADDR=${IP_HOSTS[$VM_NAME]}
+	# defines IP_ADDR
+	vm_get_ip $VM_NAME
+	[ -z $IP_ADDR ] && { echo "IP_ADDR is not defined" 1>&2 ; exit 1; }
 
 	if lxc-ls | grep -q $VM_NAME; then 
 		echo "Container $VM_NAME already exists, must be destroyed first!"
@@ -105,6 +103,20 @@ EOF
 
 	#setup apt-proxy
 	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
+}
+
+function vm_get_ip() {
+	if [ "$#" -ne 1 ]; then
+		echo "Must specify vm name"
+		exit 1
+	fi
+	VM_NAME=$1
+
+	if [ ! ${IP_HOSTS[$VM_NAME]+isset} ] ; then
+		echo "No IP for $VM_NAME found in $IP_HOSTS_FILE"
+		exit 2
+	fi
+	IP_ADDR=${IP_HOSTS[$VM_NAME]}
 }
 
 function vm_start() {
