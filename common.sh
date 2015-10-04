@@ -7,13 +7,12 @@ source creds.sh
 
 DEBIAN_RELEASE=jessie
 DATA_DIR=/qprodconfig
-IP_PREFIX=192.168.67
 IP_CIDR=23
 IP_SUBNET=255.255.254.0
 IP_GATEWAY=192.168.66.1
 IP_BRIDGE_INTERFACE=lxc-host-bridge
 IP_HOSTS_FILE=lxc-hosts
-DEB_REPO_MIRROR=$IP_PREFIX.110
+DEB_REPO_MIRROR=192.168.67.110
 
 #other static fields
 APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
@@ -32,23 +31,26 @@ fi
 
 declare -A IP_HOSTS
 while read line_raw; do
+	if [[ ${line_raw:0:1} == '#' ]]; then
+		# this is a comment
+		continue;
+	fi
+	
 	line_arr=($line_raw)
 	IP=${line_arr[0]}
 	HOST=${line_arr[1]}
 
 	echo "IP $IP Host $HOST"
 
-	IP_HOSTS[$HOST]=$IP
+	IP_HOSTS["$HOST"]=$IP
 done < $IP_HOSTS_FILE
 
 function vm_make() {
-	if [ "$#" -ne 3 ]; then
+	if [ "$#" -ne 1 ]; then
 		echo "Must specify VM, last octet of ip, bridge interface"
 		exit 1
 	fi
 	VM_NAME=$1
-	IP_SUFFIX=$2
-	IP_BRIDGE=$3
 
 	[ -z $DATA_DIR ] && { echo "DATA_DIR is not defined" 1>&2 ; exit 1; }
 	[ ! -d $DATA_DIR ] && { echo "DATA_DIR does not exist" 1>&2 ; exit 1; }
@@ -93,7 +95,7 @@ EOF
 	cat <<EOF >> $VM_ROOT/config
 lxc.network.type = veth
 lxc.network.flags = up
-lxc.network.link = $IP_BRIDGE
+lxc.network.link = $IP_BRIDGE_INTERFACE
 lxc.network.ipv4 = $IP_ADDR/$IP_CIDR
 lxc.network.ipv4.gateway = $IP_GATEWAY
 EOF
@@ -114,6 +116,7 @@ function vm_get_ip() {
 
 	if [ ! ${IP_HOSTS[$VM_NAME]+isset} ] ; then
 		echo "No IP for $VM_NAME found in $IP_HOSTS_FILE"
+		echo ${IP_HOSTS[qnas]}
 		exit 2
 	fi
 	IP_ADDR=${IP_HOSTS[$VM_NAME]}

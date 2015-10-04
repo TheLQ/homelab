@@ -3,7 +3,7 @@ source common.sh
 CONT_NAME=qnas
 
 #TODO: Depends on qbr0 existing on host
-vm_make $CONT_NAME 111 qbr0
+vm_make $CONT_NAME
 
 # add the lxc root directory for debugging purposes
 echo lxc.mount.entry=/var/lib/lxc/ $VM_FS/lxcroot none bind,create=dir 0 0 >> $VM_ROOT/config

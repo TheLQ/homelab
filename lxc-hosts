@@ -1,0 +1,4 @@
+#NOTE: File must end with newline
+192.168.67.105 qlxc
+192.168.67.110 qmirror
+192.168.67.112 qnas
