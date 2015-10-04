@@ -132,5 +132,5 @@ function vm_start_first() {
 	printf "$PASSWORD\n$PASSWORD" | passwd --root /var/lib/lxc/$VM_NAME/rootfs
 
 	#common packages
-	lxc-attach -n $VM_NAME -- apt-get install nano curl htop -y
+	lxc-attach -n $VM_NAME -- apt-get install nano curl htop wget less -y
 }
