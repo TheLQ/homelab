@@ -8,6 +8,14 @@ vm_make $CONT_NAME
 # add the lxc root directory for debugging purposes
 echo lxc.mount.entry=/var/lib/lxc/ $VM_FS/lxcroot none bind,create=dir 0 0 >> $VM_ROOT/config
 
+# this container should autostart
+cat <<EOF >> $VM_ROOT/config
+# qprod - autostart
+lxc.start.auto = 1
+lxc.start.delay = 10
+lxc.start.order = 1
+EOF
+
 vm_start_first $CONT_NAME
 
 # setup NFS exports
