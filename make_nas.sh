@@ -2,7 +2,6 @@
 source common.sh
 CONT_NAME=qnas
 
-#TODO: Depends on qbr0 existing on host
 vm_make $CONT_NAME
 
 # add the lxc root directory for debugging purposes

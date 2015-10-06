@@ -105,6 +105,9 @@ EOF
 
 	#setup apt-proxy
 	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
+
+	rm $VM_FS/etc/resolv.conf
+	ln -s $DATA_DIR/config/resolv.conf $VM_FS/etc/resolv.conf
 }
 
 function vm_get_ip() {

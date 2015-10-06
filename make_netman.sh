@@ -14,7 +14,7 @@ EOF
 
 vm_start_first $CONT_NAME
 
-lxc-attach -n $CONT_NAME -- apt-get install dnsmasq -y
+lxc-attach -n $CONT_NAME -- apt-get install dnsmasq dnsutils -y
 mv $VM_FS/etc/dnsmasq.conf $VM_FS/etc/dnsmasq.conf.orig
 ln -s $DATA_DIR/configs/netman/dnsmasq.conf $VM_FS/etc/dnsmasq.conf
 lxc-attach -n $CONT_NAME -- service dnsmasq restart
