@@ -119,7 +119,6 @@ function vm_get_ip() {
 
 	if [ ! ${IP_HOSTS[$VM_NAME]+isset} ] ; then
 		echo "No IP for $VM_NAME found in $IP_HOSTS_FILE"
-		echo ${IP_HOSTS[qnas]}
 		exit 2
 	fi
 	IP_ADDR=${IP_HOSTS[$VM_NAME]}
