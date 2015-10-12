@@ -3,6 +3,7 @@
 192.168.67.110 qmirror
 192.168.67.111 qnetman
 192.168.67.112 qnas
+192.168.67.113 qvpn
 # extra
 192.168.67.121 qmusic
 # NOTE: File must end with newline
