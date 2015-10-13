@@ -65,7 +65,7 @@ function vm_make() {
 
 	if lxc-ls | grep -q $VM_NAME; then 
 		echo "Container $VM_NAME already exists, must be destroyed first!"
-		echo "Run lxc-stop -n $VM_NAME; lxc-destroy -n $VM_NAME"
+		echo "Run lxc-stop -n $VM_NAME; lxc-destroy -n $VM_NAME; $0"
 		exit 1
 	fi
 
@@ -107,7 +107,7 @@ EOF
 	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
 
 	rm $VM_FS/etc/resolv.conf
-	ln -s $DATA_DIR/config/resolv.conf $VM_FS/etc/resolv.conf
+	ln -s $DATA_DIR/configs/resolv.conf $VM_FS/etc/resolv.conf
 }
 
 function vm_get_ip() {
