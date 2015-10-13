@@ -1,5 +1,7 @@
+# physical
+192.168.67.105 qbox
+192.168.67.106 qlxc
 # core services
-192.168.67.105 qlxc
 192.168.67.110 qmirror
 192.168.67.111 qnetman
 192.168.67.112 qnas
