@@ -4,6 +4,10 @@
 source common.sh
 CONT_NAME=qmirror
 
+# make sure SSL is setup
+source ca_common.sh
+ca_init_vm
+
 vm_make $CONT_NAME
 
 # disable default apt proxy as that's this machine

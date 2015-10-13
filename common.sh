@@ -7,6 +7,7 @@ source creds.sh
 
 DEBIAN_RELEASE=jessie
 DATA_DIR=/qprodconfig
+SECURE_DIR=/qprodsecure
 IP_CIDR=23
 IP_SUBNET=255.255.254.0
 IP_GATEWAY=192.168.66.1
@@ -76,6 +77,7 @@ function vm_make() {
 	VM_FS=$VM_ROOT/rootfs
 
 	#mount this repository inside the container
+	echo lxc.mount.entry=$SECURE_DIR $VM_FS$SECURE_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
 	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
 	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none bind,create=dir 0 0 >> $VM_ROOT/config
 	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none bind,create=dir 0 0 >> $VM_ROOT/config
