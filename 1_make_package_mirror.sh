@@ -10,6 +10,14 @@ ca_init_vm
 
 vm_make $CONT_NAME
 
+# autostart because all other machines do updates through it
+cat <<EOF >> $VM_ROOT/config
+# qprod - autostart
+lxc.start.auto = 1
+lxc.start.delay = 10
+#lxc.start.order = 0
+EOF
+
 # disable default apt proxy as that's this machine
 rm $VM_FS$APT_PROXY_PATH
 
