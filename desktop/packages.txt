@@ -27,3 +27,5 @@ sshfs
 
 xdotool
 xfe
+
+rmmod pcspkr #what if it doens't exist
