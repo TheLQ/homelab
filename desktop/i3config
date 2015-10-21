@@ -109,12 +109,13 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
 #TODO: numlock
-
+# keycodes
 # https://faq.i3wm.org/question/6212/modshifta-works-strgalta-doesnt/
 
 # alt tab emulation
 bindsym mod1+Tab workspace next_on_output
 bindsym mod1+BackSpace workspace back_and_forth
+bindsym mod1+space focus output left
 #bindsym $mod+BackSpace workspace back_and_forth
 #bindsym $mod+Tab workspace next_on_output
 #bindsym $mod+Shift+Tab workspace prev_on_output
