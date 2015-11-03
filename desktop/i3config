@@ -114,15 +114,15 @@ bindsym $mod+0 workspace 10
 
 # alt tab emulation
 bindsym mod1+Tab workspace next_on_output
+bindsym $mod+Tab workspace next_on_output
 bindsym mod1+BackSpace workspace back_and_forth
+bindsym $mod+BackSpace workspace back_and_forth
 bindsym mod1+space focus output left
-#bindsym $mod+BackSpace workspace back_and_forth
-#bindsym $mod+Tab workspace next_on_output
-#bindsym $mod+Shift+Tab workspace prev_on_output
 
 bindsym $mod+mod1+Right move workspace to output right
 bindsym $mod+mod1+Left move workspace to output left
 
+# turn off monitors
 bindsym $mod+Escape exec bash -c "sleep 1 && exec xset dpms force off"
 
 # move focused container to workspace
