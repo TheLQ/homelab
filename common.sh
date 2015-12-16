@@ -79,8 +79,8 @@ function vm_make() {
 	#mount this repository inside the container
 	echo lxc.mount.entry=$SECURE_DIR $VM_FS$SECURE_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
 	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none bind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
 
 	#container should use host configuration
 	cat <<EOF > $VM_FS/etc/network/interfaces
