@@ -1,3 +1,14 @@
+# general layout
+#
+# gateway 192.168.66.1
+# dns 192.168.67.111
+# 
+# total subnet 255.255.254.0 or /23
+# dhcp 192.168.66.100-199
+# static 192.168.66.200-239
+# vpn 192.168.66.240+/28 
+# production linux boxes: 192.168.67.100+
+#
 # physical
 192.168.67.105 qbox
 192.168.67.106 qlxc
@@ -8,4 +19,5 @@
 192.168.67.113 qvpn
 # extra
 192.168.67.121 qmusic
+192.168.67.130 qdev
 # NOTE: File must end with newline
