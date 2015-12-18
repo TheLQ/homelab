@@ -1,0 +1,31 @@
+lightdm i3
+arandr
+iceweasel
+keepass2
+sudo mkdir /quackdrive
+sudo mount -t nfs qbox:/quackdrive /quackdrive
+sublime text package
+xclip
+git
+htop
+htop's config
+learn uxvrt
+fonts-hack-ttf
+gnome-terminal with hack font
+autouser with lightdm or replace
+vlc
+sed s/\#greeter-setup-script.+/greeter-setup-script=\/homelab\/desktop\/x-onstart.sh/i /etc/lightdm/lightdm.conf
+firefox middle click disable
+
+http://unix.stackexchange.com/a/151525
+media.peerconnection.video
+media.gstreamer.enabled
+media.mediasource
+https://www.reddit.com/r/debian/comments/33asjn/iceweasel_and_youtube_html5/
+sshfs
+
+
+xdotool
+xfe
+
+rmmod pcspkr #what if it doens't exist
