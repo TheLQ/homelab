@@ -7,7 +7,7 @@ source common.sh
 # Must match whats in lxc-hosts
 LXC_HOST_NAME=qlxc
 # renamed interface to qeth0 according to http://forums.debian.net/viewtopic.php?f=19&t=122795
-ETH=qeth0
+ETH=eth0
 
 # defines IP_ADDR
 vm_get_ip $LXC_HOST_NAME
@@ -16,12 +16,14 @@ vm_get_ip $LXC_HOST_NAME
 # fail if the interface is already configured
 if grep -q $ETH /etc/network/interfaces; then
 	echo "Detected existing config of $ETH in /etc/network/interfaces"
-	exit 2
+	#exit 2
 fi
 if grep -q $LXC_HOST_NAME /etc/network/interfaces; then
 	echo "Detected existing config of $LXC_HOST_NAME in /etc/network/interfaces"
-	exit 2
+	#exit 2
 fi
+
+apt-get install bridge-utils
 
 interfaces_file=/etc/network/interfaces.d/$IP_BRIDGE_INTERFACE.conf
 if [ -f $interfaces_file ]; then
@@ -44,4 +46,18 @@ iface $IP_BRIDGE_INTERFACE inet static
     #dns-search quackluster.lan
 EOF
 
+echo "==Verify enviornment before restarting networking=="
+bash
+#TODO: Didn't find eth0 or eno from default install
+#TODO: each host should source the bashrc instead of linking to it
+#TODO: Common install stuff like nano
+#TODO: see qbox:/root/setup.sh for other software
+#TODO: apt-proxy but commented out
+
+#if interface is enabled, reboot
+
+#install zfs, hdparm, lshw, iperf
+
 service networking restart
+
+echo source $DATA_DIR/.bashrc > .bashrc

@@ -7,6 +7,7 @@ source creds.sh
 
 DEBIAN_RELEASE=jessie
 DATA_DIR=/qprodconfig
+SECURE_DIR=/qprodsecure
 IP_CIDR=23
 IP_SUBNET=255.255.254.0
 IP_GATEWAY=192.168.66.1
@@ -65,7 +66,7 @@ function vm_make() {
 
 	if lxc-ls | grep -q $VM_NAME; then 
 		echo "Container $VM_NAME already exists, must be destroyed first!"
-		echo "Run lxc-stop -n $VM_NAME; lxc-destroy -n $VM_NAME"
+		echo "Run lxc-stop -n $VM_NAME; lxc-destroy -n $VM_NAME; $0"
 		exit 1
 	fi
 
@@ -76,9 +77,10 @@ function vm_make() {
 	VM_FS=$VM_ROOT/rootfs
 
 	#mount this repository inside the container
+	echo lxc.mount.entry=$SECURE_DIR $VM_FS$SECURE_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
 	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none bind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
+	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
 
 	#container should use host configuration
 	cat <<EOF > $VM_FS/etc/network/interfaces
@@ -107,7 +109,7 @@ EOF
 	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
 
 	rm $VM_FS/etc/resolv.conf
-	ln -s $DATA_DIR/config/resolv.conf $VM_FS/etc/resolv.conf
+	ln -s $DATA_DIR/configs/resolv.conf $VM_FS/etc/resolv.conf
 }
 
 function vm_get_ip() {
