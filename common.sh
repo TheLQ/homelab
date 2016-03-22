@@ -17,6 +17,9 @@ DEB_REPO_MIRROR=192.168.67.110
 
 #other static fields
 APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
+LXC_PATH=/qprodconfig/configs/lxc
+LXC_CONFIGS=$LXC_PATH/containers
+LXC_INTERFACE_CONFIGS=$LXC_PATH/containers.network
 
 # make sure the data directory always exists
 if [[ ! -d $DATA_DIR ]]; then
@@ -52,6 +55,8 @@ function vm_make() {
 		exit 1
 	fi
 	VM_NAME=$1
+	LXC_CONFIG=$LXC_CONFIGS/$VM_NAME
+	LXC_INTERFACE_CONFIG=$LXC_INTERFACE_CONFIGS/$VM_NAME
 
 	[ -z $DATA_DIR ] && { echo "DATA_DIR is not defined" 1>&2 ; exit 1; }
 	[ ! -d $DATA_DIR ] && { echo "DATA_DIR does not exist" 1>&2 ; exit 1; }
@@ -59,6 +64,8 @@ function vm_make() {
 	[ -z $IP_CIDR ] && { echo "IP_CIDR is not defined" 1>&2 ; exit 1; }
 	[ -z $IP_GATEWAY ] && { echo "IP_GATEWAY is not defined" 1>&2 ; exit 1; }
 	[ -z $PASSWORD ] && { echo "PASSWORD is not defined" 1>&2 ; exit 1; }
+	[ ! -f $LXC_CONFIG ] && { echo "Missing config in $LXC_CONFIGS" 1>&2 ; exit 1; }
+	[ ! -f $LXC_INTERFACE_CONFIG ] && { echo "Missing config in $LXC_INTERFACE_CONFIGS" 1>&2 ; exit 1; }
 
 	# defines IP_ADDR
 	vm_get_ip $VM_NAME
@@ -77,36 +84,20 @@ function vm_make() {
 	VM_FS=$VM_ROOT/rootfs
 
 	#mount this repository inside the container
-	echo lxc.mount.entry=$SECURE_DIR $VM_FS$SECURE_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=$DATA_DIR $VM_FS$DATA_DIR none bind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/quackdrive $VM_FS/quackdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
-	echo lxc.mount.entry=/scratchdrive $VM_FS/scratchdrive none rbind,create=dir 0 0 >> $VM_ROOT/config
+	mv $VM_ROOT/config $VM_ROOT/config.orig
+	ln -s $LXC_CONFIG $VM_ROOT/config
 
 	#container should use host configuration
-	cat <<EOF > $VM_FS/etc/network/interfaces
-## WARNING: Managed by qprod
-auto lo
-iface lo inet loopback
-
-auto eth0
-iface eth0 inet manual
-EOF
-	
-	#configure IP in lxc host, removing any existing config
-	sed -i '/lxc\.network/d' $VM_ROOT/config
-	cat <<EOF >> $VM_ROOT/config
-lxc.network.type = veth
-lxc.network.flags = up
-lxc.network.link = $IP_BRIDGE_INTERFACE
-lxc.network.ipv4 = $IP_ADDR/$IP_CIDR
-lxc.network.ipv4.gateway = $IP_GATEWAY
-EOF
+	mv $VM_FS/etc/network/interfaces $VM_FS/etc/network/interfaces.orig
+	ln -s $LXC_INTERFACE_CONFIG $VM_FS/etc/network/interfaces
 
 	rm -rf $VM_FS/root/.bashrc
 	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
 
 	#setup apt-proxy
-	echo "Acquire::http::Proxy \"http://$DEB_REPO_MIRROR\";" >> $VM_FS$APT_PROXY_PATH
+	rm $VM_FS/root/.bashrc
+	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
+	ln -s $LXC_PATH/apt-proxy.conf $VM_FS$APT_PROXY_PATH
 
 	rm $VM_FS/etc/resolv.conf
 	ln -s $DATA_DIR/configs/resolv.conf $VM_FS/etc/resolv.conf
@@ -151,5 +142,7 @@ function vm_start_first() {
 	printf "$PASSWORD\n$PASSWORD" | passwd --root /var/lib/lxc/$VM_NAME/rootfs
 
 	#common packages
+	lxc-attach -n $VM_NAME -- apt-get update
+	lxc-attach -n $VM_NAME -- apt-get dist-upgrade -y
 	lxc-attach -n $VM_NAME -- apt-get install nano curl htop wget less -y
 }
