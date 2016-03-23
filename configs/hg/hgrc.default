@@ -1,0 +1,7 @@
+# default hgrc
+%include /qprodconfig/configs/hg/hgrc.common.conf
+
+%include /qprodconfig/configs/hg/hgrc.user.conf
+
+%include /qprodsecure/hgrc.auth.conf
+
