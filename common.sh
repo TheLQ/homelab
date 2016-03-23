@@ -78,6 +78,11 @@ function vm_make() {
 		exit 1
 	fi
 
+	if ! grep -q $IP_ADDR $LXC_CONFIG; then
+		echo "Didn't detect ip in config"
+		exit 2
+	fi
+
 	#create and setup pre container
 	lxc-create -n $VM_NAME -t debian -- -r $DEBIAN_RELEASE
 
