@@ -5,7 +5,7 @@ source common.sh
 [ -z $IP_GATEWAY ] && { echo "IP_GATEWAY is not defined" 1>&2 ; exit 1; }
 
 # Must match whats in lxc-hosts
-LXC_HOST_NAME=qlxc
+LXC_HOST_NAME=qbox
 # renamed interface to qeth0 according to http://forums.debian.net/viewtopic.php?f=19&t=122795
 ETH=eth0
 
@@ -45,6 +45,9 @@ iface $IP_BRIDGE_INTERFACE inet static
     #dns-nameservers 192.168.66.3
     #dns-search quackluster.lan
 EOF
+
+# enable routing
+echo net.ipv4.ip_forward = 1 > /etc/sysctl.d/enable-routing.conf
 
 echo "==Verify enviornment before restarting networking=="
 bash
