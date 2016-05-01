@@ -23,7 +23,8 @@ if grep -q $LXC_HOST_NAME /etc/network/interfaces; then
 	#exit 2
 fi
 
-apt-get install bridge-utils
+apt install $APT_COMMON_PACKAGES
+apt install bridge-utils
 
 interfaces_file=/etc/network/interfaces.d/$IP_BRIDGE_INTERFACE.conf
 if [ -f $interfaces_file ]; then
@@ -64,3 +65,12 @@ bash
 service networking restart
 
 echo source $DATA_DIR/.bashrc > .bashrc
+
+apt install btrfs-progs
+
+# TODO: As of 4/30/16 linux-zfs was in unstable, stuck in https://ftp-master.debian.org/new.html
+# SEE: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=686447#426
+# SEE: https://qa.debian.org/developer.php?login=pkg-zfsonlinux-devel@lists.alioth.debian.org
+wget http://archive.zfsonlinux.org/debian/pool/main/z/zfsonlinux/zfsonlinux_6_all.deb
+dpkg -i zfsonlinux_6_all.deb
+apt install debian-zfs

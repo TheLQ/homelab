@@ -14,6 +14,7 @@ IP_GATEWAY=192.168.66.1
 IP_BRIDGE_INTERFACE=lxc-host-bridge
 IP_HOSTS_FILE=lxc-hosts
 DEB_REPO_MIRROR=192.168.67.110
+APT_COMMON_PACKAGES="nano curl htop wget less"
 
 #other static fields
 APT_PROXY_PATH=/etc/apt/apt.conf.d/apt-proxy.conf
@@ -151,5 +152,5 @@ function vm_start_first() {
 	printf "$PASSWORD\n$PASSWORD" | passwd --root /var/lib/lxc/$VM_NAME/rootfs
 
 	#common packages
-	lxc-attach -n $VM_NAME -- apt-get install nano curl htop wget less -y
+	lxc-attach -n $VM_NAME -- apt-get install $APT_COMMON_PACKAGES -y
 }
