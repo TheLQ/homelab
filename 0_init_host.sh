@@ -63,3 +63,6 @@ apt install debian-zfs
 # LXC according to https://wiki.debian.org/LXC
 # TODO: libvirt?
 apt install lxc debootstrap
+
+rm -rf /root/.ssh
+ln -s $SECURE_DIR/ssh /root/.ssh
