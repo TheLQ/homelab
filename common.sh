@@ -92,12 +92,10 @@ function vm_make() {
 	mv $VM_FS/etc/network/interfaces $VM_FS/etc/network/interfaces.orig
 	ln -s $LXC_INTERFACE_CONFIG $VM_FS/etc/network/interfaces
 
-	rm -rf $VM_FS/root/.bashrc
-	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
+	rm $VM_FS/root/.bashrc
+	ln -s $DATA_DIR/configs/bashrc $VM_FS/root/.bashrc
 
 	#setup apt-proxy
-	rm $VM_FS/root/.bashrc
-	ln -s $DATA_DIR/.bashrc $VM_FS/root/.bashrc
 	ln -s $LXC_PATH/apt-proxy.conf $VM_FS$APT_PROXY_PATH
 
 	rm $VM_FS/etc/resolv.conf
@@ -143,7 +141,7 @@ function vm_start_first() {
 	printf "$PASSWORD\n$PASSWORD" | passwd --root /var/lib/lxc/$VM_NAME/rootfs
 
 	#common packages
-	lxc-attach -n $VM_NAME -- apt-get update
-	lxc-attach -n $VM_NAME -- apt-get dist-upgrade -y
-	lxc-attach -n $VM_NAME -- apt-get install $APT_COMMON_PACKAGES -y
+	lxc-attach -n $VM_NAME -- apt update
+	lxc-attach -n $VM_NAME -- apt full-upgrade -y
+	lxc-attach -n $VM_NAME -- apt install $APT_COMMON_PACKAGES -y
 }
