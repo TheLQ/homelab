@@ -5,7 +5,7 @@ set -e -x
 #export PASSWORD=yourpassword
 source creds.sh
 
-DEBIAN_RELEASE=jessie
+DEBIAN_RELEASE=sid
 DATA_DIR=/qprodconfig
 SECURE_DIR=/qprodsecure
 IP_CIDR=23
