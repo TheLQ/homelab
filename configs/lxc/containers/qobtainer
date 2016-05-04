@@ -9,6 +9,7 @@ lxc.include = /qprodconfig/configs/lxc/network.default.conf
 lxc.network.ipv4 = 192.168.67.131/23
 
 lxc.include = /qprodconfig/configs/lxc/mount.qprodconfig.conf
+lxc.include = /qprodconfig/configs/lxc/mount.quackdrive.conf
 
 # Container specific configuration
 lxc.utsname = qobtainer
