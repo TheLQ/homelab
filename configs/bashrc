@@ -18,8 +18,18 @@ get_exit_status(){
    fi
 }
 
+if [ ! -z "$HOST_COLOR" ]; then
+  echo color $HOST_COLOR
+  eval setColor=\$$HOST_COLOR
+  #echo "Setting host color to $HOST_COLOR"
+  PROMPT_HOST_COLOR=$setColor
+else
+  #echo no color
+  PROMPT_HOST_COLOR=
+fi
+
 PROMPT_COMMAND='exitStatus=$(get_exit_status)'
-PS1='\n\[${exitStatus}\] ${debian_chroot:+($debian_chroot)}\u@\h:\w\$ \n'
+PS1='\n\[${exitStatus}\] ${debian_chroot:+($debian_chroot)}\u@${PROMPT_HOST_COLOR}\h${NONE}:\w\$ \n'
 
 # Note: PS1 and umask are already set in /etc/profile. You should not
 # need this unless you want different defaults for root.
