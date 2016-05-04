@@ -15,9 +15,13 @@ rm $VM_FS$APT_PROXY_PATH
 
 vm_start_first $CONT_NAME
 
-lxc-attach -n $CONT_NAME -- apt-get install nginx -y
-lxc-attach -n $CONT_NAME -- bash -c 'rm /etc/nginx/sites-enabled/*'
-lxc-attach -n $CONT_NAME -- ln -s $DATA_DIR/configs/package-mirror/nginx-proxy-server.conf /etc/nginx/sites-enabled/
-lxc-attach -n $CONT_NAME -- ln -s $DATA_DIR/configs/package-mirror/nginx-proxy-http.conf /etc/nginx/conf.d/
-#lxc-attach -n $CONT_NAME -- mkdir /srv #already exists?
-lxc-attach -n $CONT_NAME -- service nginx restart
+lxc-attach -n $CONT_NAME -- apt install apt-cacher-ng
+
+# old nginx based way, removed due to complexity
+# and httpredir.debian.org redirecting us to different mirrors which were all cached separetly
+#lxc-attach -n $CONT_NAME -- apt install nginx -y
+#lxc-attach -n $CONT_NAME -- bash -c 'rm /etc/nginx/sites-enabled/*'
+#lxc-attach -n $CONT_NAME -- ln -s $DATA_DIR/configs/package-mirror/nginx-proxy-server.conf /etc/nginx/sites-enabled/
+#lxc-attach -n $CONT_NAME -- ln -s $DATA_DIR/configs/package-mirror/nginx-proxy-http.conf /etc/nginx/conf.d/
+##lxc-attach -n $CONT_NAME -- mkdir /srv #already exists?
+#lxc-attach -n $CONT_NAME -- service nginx restart
