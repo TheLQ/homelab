@@ -1,0 +1,20 @@
+lxc.rootfs = /var/lib/lxc/qobtainer/rootfs
+
+# Common configuration
+lxc.include = /usr/share/lxc/config/debian.common.conf
+
+lxc.include = /qprodconfig/configs/lxc/all.common.conf
+
+lxc.include = /qprodconfig/configs/lxc/network.default.conf
+lxc.network.ipv4 = 192.168.67.131/23
+
+lxc.include = /qprodconfig/configs/lxc/mount.qprodconfig.conf
+
+# Container specific configuration
+lxc.utsname = qobtainer
+
+lxc.hook.autodev=/qprodconfig/configs/obtainer/mktun-lxc.sh
+
+lxc.start.auto = 1
+lxc.start.delay = 10
+#lxc.start.order = 0

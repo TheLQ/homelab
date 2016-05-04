@@ -20,4 +20,5 @@
 # extra
 192.168.67.121 qmusic
 192.168.67.130 qdev
+192.168.67.131 qobtainer
 # NOTE: File must end with newline
